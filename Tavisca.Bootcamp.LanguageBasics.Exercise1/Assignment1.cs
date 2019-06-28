@@ -22,58 +22,62 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static int FindDigit(string equation)
         {     
-            string first_num = equation.Split('*')[0];
-            string second_num = equation.Split('*')[1].Split('=')[0];
-            string result = equation.Split('=')[1];
+	    string[] numbers = equation.Split(new char[] { '*', '=' });
+            string firstnum = numbers[0];
+            string secondnum = numbers[1];
+            string result = numbers[2];
 
-            bool ques_in_first = Int32.TryParse(first_num, out int int_firstnum);
-            bool ques_in_second = Int32.TryParse(second_num, out int int_secondnum);
-            bool ques_in_result = Int32.TryParse(result, out int int_result);
-
-            
-            string newEquation = "";
-
-            if(ques_in_first == false)
+            if(firstnum.Contains('?'))
             {
-                if(int_result % int_secondnum==0)
+		int c = int.Parse(result);
+		int b = int.Parse(secondnum);
+                if(c % b==0)
                 {                              
-                    string temp = (int_result / int_secondnum) + "";
-                    newEquation += temp + "*" + second_num + "=" + result;
+                    string temp = (c / b) + "";
+		    if(temp.Length == firstnum.Length)
+		    {
+		       int index = firstnum.indexOf('?');
+		       return (int)(temp[index] - '0');
+		    }
+		    else
+		       return -1;
                 }
                 else 
                     return -1;
             }
 
-            if(ques_in_second == false)
+            if(secondnum.Contains('?'))
             {
-                if(int_result % int_firstnum == 0)
+		int c = int.Parse(result);
+		int a = int.Parse(firstnum);
+                if(c % a == 0)
                 {
-                string temp = (int_result / int_firstnum) + "";
-                newEquation += first_num + "*" + temp + "=" + result;
+                    string temp = (c / a) + "";
+                    if(temp.Length == secondnum.Length)
+		    {
+		       int index = secondnum.indexOf('?');
+		       return (int)(temp[index] - '0');
+		    }
+		    else
+		       return -1;
                 }
                 else
                     return -1;
             }
 
-            if(ques_in_third == false)
+            if(result.Contains('?'))
             {
-                string temp = (int_firstnum * int_secondnum) + "";
-                newEquation += first_num + "*" + second_num + "=" + temp;
+		int a = int.Parse(firstnum);
+		int b = int.Parse(secondnum);
+                string temp = (a * b) + "";
+                if(temp.Length == result.Length)
+		{
+		    int index = result.indexOf('?');
+		    return (int)(temp[index] - '0');
+		}
+		else
+		    return -1;
             }
-
-            if (equation.Length != newEquation.Length)
-            {
-                return -1;
-	        }
-            else
-            {
-                for (int i = 0; i < newEquation.Length; i++)
-			    {
-                    if(newEquation[i] != equation[i] && equation[i]=='?')
-                        return (int)(newEquation[i] - '0');
-			    }
-            }
-            throw new NotImplementedException();
         }
     }
 }
